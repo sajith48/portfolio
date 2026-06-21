@@ -168,6 +168,62 @@ const TypewriterScramble = ({ phrases, delay = 100, deleteDelay = 60, pauseTime 
   );
 };
 
+const CursorGlow = () => {
+  const cursorX = useMotionValue(-100);
+  const cursorY = useMotionValue(-100);
+  const [isHovering, setIsHovering] = useState(false);
+
+  useEffect(() => {
+    const moveCursor = (e) => {
+      cursorX.set(e.clientX);
+      cursorY.set(e.clientY);
+    };
+
+    const handleMouseOver = (e) => {
+      const target = e.target;
+      if (!target || !target.closest) return;
+      const isInteractive = 
+        target.closest('a') !== null || 
+        target.closest('button') !== null || 
+        target.closest('.group') !== null;
+      setIsHovering(isInteractive);
+    };
+
+    window.addEventListener("mousemove", moveCursor);
+    window.addEventListener("mouseover", handleMouseOver);
+
+    return () => {
+      window.removeEventListener("mousemove", moveCursor);
+      window.removeEventListener("mouseover", handleMouseOver);
+    };
+  }, [cursorX, cursorY]);
+
+  const smoothX = useSpring(cursorX, { stiffness: 100, damping: 25, mass: 0.5 });
+  const smoothY = useSpring(cursorY, { stiffness: 100, damping: 25, mass: 0.5 });
+
+  return (
+    <motion.div
+      className="fixed top-0 left-0 pointer-events-none z-[1] hidden md:block"
+      style={{
+        x: smoothX,
+        y: smoothY,
+        translateX: '-50%',
+        translateY: '-50%'
+      }}
+    >
+      <motion.div
+        animate={{
+          width: isHovering ? 350 : 200,
+          height: isHovering ? 350 : 200,
+          opacity: isHovering ? 0.3 : 0.15,
+        }}
+        transition={{ duration: 0.3, ease: "easeOut" }}
+        className="rounded-full bg-gradient-to-tr from-[#8B5CF6] via-[#6366F1] to-[#3B82F6] blur-[60px]"
+      />
+    </motion.div>
+  );
+};
+
 function App() {
   const [activeSection, setActiveSection] = useState('home');
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
@@ -330,6 +386,9 @@ Designed with performance and simplicity in mind, QuickSlots stores all data loc
         <div className="absolute top-[38%] right-[5%] w-[35vw] h-[35vw] rounded-full bg-purple-500/6 blur-[110px] animate-blob-2" />
         <div className="absolute bottom-[12%] left-[18%] w-[40vw] h-[40vw] rounded-full bg-cyan-500/8 blur-[125px] animate-blob-3" />
       </div>
+
+      {/* Interactive Cursor Glow */}
+      <CursorGlow />
 
       {/* 1. Floating Navbar */}
       <header className="fixed top-6 left-0 right-0 z-50 px-4 md:px-8 max-w-7xl mx-auto">
