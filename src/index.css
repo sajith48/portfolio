@@ -3,13 +3,23 @@
 
 @theme {
   --font-sans: "Plus Jakarta Sans", system-ui, sans-serif;
-  --color-brand-bg: #080A10;
-  --color-brand-card: rgba(17, 21, 34, 0.45);
-  --color-brand-border: rgba(255, 255, 255, 0.08);
-  --color-brand-glow-indigo: rgba(99, 102, 241, 0.15);
-  --color-brand-glow-purple: rgba(168, 85, 247, 0.15);
-  --color-brand-glow-cyan: rgba(6, 182, 212, 0.15);
   
+  /* Core brand colors */
+  --color-brand-indigo: #6366F1;
+  --color-brand-purple: #A855F7;
+  --color-brand-cyan: #06B6D4;
+  --color-brand-pink: #EC4899;
+  --color-brand-blue: #3B82F6;
+
+  /* Theme variables (mapped in :root) */
+  --color-bg: var(--bg-color);
+  --color-text: var(--text-color);
+  --color-text-muted: var(--text-muted);
+  --color-card-bg: var(--card-bg);
+  --color-card-border: var(--card-border);
+  --color-card-shadow: var(--card-shadow);
+  --color-card-hover-border: var(--card-hover-border);
+
   --animate-gradient-slow: gradient-shift 15s ease infinite;
   --animate-blob-1: float-blob-1 25s ease infinite alternate;
   --animate-blob-2: float-blob-2 30s ease infinite alternate-reverse;
@@ -36,14 +46,42 @@
     80% { transform: translate(-40px, -40px) scale(0.95); }
     100% { transform: translate(0px, 0px) scale(0.9); }
   }
+  @keyframes shimmer {
+    100% {
+      transform: translateX(100%);
+    }
+  }
+}
+
+:root {
+  /* Dark Mode Default */
+  --bg-color: #0A0A0A;
+  --text-color: #F3F4F6;
+  --text-muted: #9CA3AF;
+  --card-bg: rgba(17, 21, 34, 0.45);
+  --card-border: rgba(255, 255, 255, 0.08);
+  --card-hover-border: rgba(255, 255, 255, 0.15);
+  --card-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.4);
+}
+
+:root.light {
+  /* Light Mode Settings */
+  --bg-color: #F8FAFC;
+  --text-color: #0F172A;
+  --text-muted: #475569;
+  --card-bg: rgba(255, 255, 255, 0.65);
+  --card-border: rgba(0, 0, 0, 0.08);
+  --card-hover-border: rgba(0, 0, 0, 0.15);
+  --card-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.05);
 }
 
 /* Custom Base Styles */
 html {
   scroll-behavior: smooth;
-  background-color: var(--color-brand-bg);
-  color: #F3F4F6;
+  background-color: var(--bg-color);
+  color: var(--text-color);
   font-family: var(--font-sans);
+  transition: background-color 0.4s ease, color 0.4s ease;
 }
 
 body {
@@ -52,18 +90,25 @@ body {
   position: relative;
 }
 
-/* Custom Utilities */
+/* Glass Panels */
 .glass-panel {
-  background: var(--color-brand-card);
+  background: var(--card-bg);
   backdrop-filter: blur(16px);
   -webkit-backdrop-filter: blur(16px);
-  border: 1px solid var(--color-brand-border);
-  box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.4);
+  border: 1px solid var(--card-border);
+  box-shadow: var(--card-shadow);
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .glass-panel:hover {
-  border-color: rgba(255, 255, 255, 0.15);
+  border-color: var(--card-hover-border);
+}
+
+/* Light mode specific hover shadow adjustments */
+:root.light .glass-panel:hover {
+  box-shadow: 0 12px 40px 0 rgba(0, 0, 0, 0.08);
+}
+:root:not(.light) .glass-panel:hover {
   box-shadow: 0 12px 40px 0 rgba(0, 0, 0, 0.55);
 }
 
@@ -96,6 +141,7 @@ body {
   z-index: 100;
   width: 0%;
   transition: width 0.1s ease-out;
+  transform-origin: left;
 }
 
 /* Lenis smooth scrolling rules */
@@ -108,7 +154,7 @@ html.lenis, html.lenis body {
 }
 
 .lenis.lenis-smooth [data-lenis-prevent] {
-  overscroll-behavior: contain;
+  overscroll-behavior: auto;
 }
 
 .lenis.lenis-stopped {
@@ -124,12 +170,35 @@ html.lenis, html.lenis body {
   width: 8px;
 }
 ::-webkit-scrollbar-track {
-  background: #080A10;
+  background: var(--bg-color);
 }
 ::-webkit-scrollbar-thumb {
-  background: #1E293B;
+  background: var(--text-muted);
   border-radius: 4px;
+  opacity: 0.5;
 }
 ::-webkit-scrollbar-thumb:hover {
-  background: #334155;
+  background: var(--color-brand-indigo);
+}
+
+/* LeetCode Heatmap Styles */
+.heatmap-container[data-theme="dark"] .react-calendar-heatmap .color-empty { fill: #161b22; }
+.heatmap-container[data-theme="dark"] .react-calendar-heatmap .color-scale-1 { fill: #0e4429; }
+.heatmap-container[data-theme="dark"] .react-calendar-heatmap .color-scale-2 { fill: #006d32; }
+.heatmap-container[data-theme="dark"] .react-calendar-heatmap .color-scale-3 { fill: #26a641; }
+.heatmap-container[data-theme="dark"] .react-calendar-heatmap .color-scale-4 { fill: #39d353; }
+
+.heatmap-container[data-theme="light"] .react-calendar-heatmap .color-empty { fill: #ebedf0; }
+.heatmap-container[data-theme="light"] .react-calendar-heatmap .color-scale-1 { fill: #9be9a8; }
+.heatmap-container[data-theme="light"] .react-calendar-heatmap .color-scale-2 { fill: #40c463; }
+.heatmap-container[data-theme="light"] .react-calendar-heatmap .color-scale-3 { fill: #30a14e; }
+.heatmap-container[data-theme="light"] .react-calendar-heatmap .color-scale-4 { fill: #216e39; }
+
+.react-calendar-heatmap text {
+  font-size: 10px;
+  fill: var(--text-muted);
+}
+.react-calendar-heatmap rect:hover {
+  stroke: var(--color-brand-indigo);
+  stroke-width: 1px;
 }
