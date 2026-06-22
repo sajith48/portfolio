@@ -540,7 +540,7 @@ Designed with performance and simplicity in mind, QuickSlots stores all data loc
               {/* Avatar Box */}
               <div className="relative z-10 w-64 h-64 sm:w-80 sm:h-80 rounded-full overflow-hidden border-2 border-white/10 group-hover:border-indigo-400/50 transition-all duration-500">
                 <img 
-                  src="/images/profile_avatar_178203792548.jpg" 
+                  src="/images/profile_avatar_1782037925482.jpg" 
                   alt="Sajith R Avatar" 
                   className="w-full h-full object-cover scale-105 group-hover:scale-110 transition-transform duration-700"
                 />
