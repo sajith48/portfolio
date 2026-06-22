@@ -16,7 +16,7 @@ export const educationData = [
   {
     id: 3,
     degree: "Class 10th (Secondary School)",
-    school: "Government Boys Higher Secondary School",
+    school: "St. Mary's High School",
     years: "2022",
     score: "Grades: 75.00%"
   }
